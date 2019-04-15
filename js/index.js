@@ -1,85 +1,67 @@
-Vue.component("super-componente", {
-  props: ["nombre"],
-  data: function () {
-    return {
-      likes: 300
-    };
-  },
-  methods: {
-    addLike: function () {
-      this.likes++;
-    }
-  },
-  template: `<div style="border: 1px solid blue;" class="col-md-6">
-          <h3>Soy un super componente y me llamo {{ nombre }} 🍉</h3>
-          <button @click="addLike()">👍 Likes {{ likes }}</button>
-      </div>`
-});
-
-
-Vue.component("agregar-cliente", {
-  props: [],
-  data: function () {
-    return {
-      likes: 300
-    };
-  },
-  methods: {
-    addLike: function () {
-      this.likes++;
-    }
-  },
-  template: `<div class="container register">
-    <div class="row">
-      <div class="col-md-3 register-left">
-        <img src="./ferreteria.jpg" style="width: 100%;" alt="" />
-        <h3>Reto Factura</h3>
-      </div>
-      <div class="col-md-9 register-right">
-        <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <h3 class="register-heading">Agregar cliente</h3>
-            <div class="row register-form">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Nombre *" value="" />
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Apellido *" value="" />
-                </div>
-                <div class="form-group">
-                  <input type="password" class="form-control" placeholder="Identificación *" value="" />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="email" class="form-control" placeholder="Correo *" value="" />
-                </div>
-                <div class="form-group">
-                  <input type="text" minlength="10" maxlength="10" name="txtEmpPhone" class="form-control"
-                    placeholder="Celular *" value="" />
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Enter Your Answer *" value="" />
-                </div>
-                <input type="submit" class="btnRegister" value="Register" @click/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>`
-});
-
+const encontrarIdentificacion = ({identificacion}, identificacionBusqueda) => identificacion === identificacionBusqueda;
 
 Vue.component("v-select", VueSelect.VueSelect);
+Vue.component("agregar-cliente", {
+  props: {lista: Array},
+  data: function () {
+    return {
+      cliente: {
+        nombre: '',
+        apellido: '',
+        correo: '',
+        identificacion: '',
+        celular: ''
+      }
+    }
+  },
+  methods: {
+    guardarCliente: function () {
+      if(this.validarCampos() && this.validarCedula()){
+        this.lista.push(this.cliente);
+        this.limpiarCampos();
+        alert("Cliente guardado con éxito!")
+      } 
+      else alert('Recuerde no se puede registrar la misma identificación y todos los datos son obligatorios.')
+    },
+    validarCampos: function () {
+      for (var key in this.cliente) {
+        if(this.cliente[key]==='') return false;
+      }
+      return true;
+    },
+    validarCedula: function () {
+      return this.lista.filter(clienteEvaluar => encontrarIdentificacion(clienteEvaluar, this.cliente.identificacion).length === 0);
+    },
+    limpiarCampos:function () {
+      for (var key in this.cliente) {
+        this.cliente[key]='';
+      }
+    }
+  },
+  template: '#agregar-cliente'
+});
+
+
 var app = new Vue({
   el: "#factura",
   data: {
     titulo: "Reto factura Vue",
-    listaProductos : [
-
+    listaProductos: [
+      {
+        nombre: 'Tornillos',
+        stock: 20,
+        precio: 300
+      },
+      {
+        nombre: 'Clavos',
+        stock: 30,
+        precio: 200
+      },
+      {
+        nombre: 'Tubo',
+        stock: 40,
+        precio: 500
+      }
     ],
     estadosApp: {
       agregarCliente: false,
@@ -87,19 +69,36 @@ var app = new Vue({
       agregarProducto: false,
       editarProducto: false,
       listaProductos: false,
-      listaClientes:false,
-      agregarFactura:false,
+      listaClientes: false,
+      agregarFactura: false,
       listaFacturas: false,
-      factura:false
-    }
+      factura: false
+    },
+    listaClientes: [
+      {
+        nombre: 'Pacho',
+        apellido: 'Cifuentes',
+        correo: 'pacho@gmail.com',
+        identificacion: '11',
+        celular: '320111'
+      },
+      {
+        nombre: 'Andres',
+        apellido: 'Pelaez',
+        correo: 'andre@gmail.com',
+        identificacion: '22',
+        celular: '3222'
+      }
+    ],
+    clienteFactura:{}
   },
-  methods: {    
-    cerrarTodo : function(){
-      for(var key in this.estadosApp) {
+  methods: {
+    cerrarTodo: function () {
+      for (var key in this.estadosApp) {
         this.estadosApp[key] = false;
-    }
+      }
     }
   }, beforeMount() {
-    this.estadosApp.agregarCliente = true;
+    this.estadosApp.factura = true;
   },
 });

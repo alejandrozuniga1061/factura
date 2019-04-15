@@ -14,11 +14,180 @@
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <div id="factura">
-    <agregar-cliente v-if="estadosApp.agregarCliente"></agregar-cliente>
+    <!--X-Templates-->
+    <script type="text/x-template" id="agregar-cliente">
+        <div class="container register">
+            <div class="row">
+            <div class="col-md-3 register-left">
+              <img src="./ferreteria.jpg" style="width: 100%;" alt="" />
+              <h3>Reto Factura</h3>
+            </div>
+            <div class="col-md-9 register-right">
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                  <h3 class="register-heading">Agregar cliente</h3>
+                  <div class="row register-form">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="text" v-model="cliente.nombre" class="form-control" placeholder="Nombre *" value="" />
+                      </div>
+                      <div class="form-group">
+                        <input type="text" v-model="cliente.apellido" class="form-control" placeholder="Apellido *" value="" />
+                      </div>
+                      <div class="form-group">
+                        <input type="password" v-model="cliente.identificacion" class="form-control" placeholder="Identificación *" value="" />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="email" v-model="cliente.correo" class="form-control" placeholder="Correo *" value="" />
+                      </div>
+                      <div class="form-group">
+                        <input type="text" v-model="cliente.celular" minlength="10" maxlength="10" name="txtEmpPhone" class="form-control"
+                          placeholder="Celular *" value="" />
+                      </div>
+                      <input type="submit" class="btnRegister" value="Register" @click="guardarCliente()" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </script>
+
+    <!--Author      : @arboshiki-->
+    <div id="invoice" v-if="estadosApp.factura">
+      <div class="invoice overflow-auto">
+        <div style="min-width: 600px">
+          <header>
+            <div class="row">
+              <div class="col">
+                <a target="_blank" href="https://lobianijs.com">
+                  <img src="./ferreteria.jpg" style="width: 60%;" alt="" />
+                </a>
+              </div>
+              <div class="col company-details">
+                <h2 class="name">
+                  Factura
+                </h2>
+                <div>Calle Falsa 123</div>
+                <div>(320) 929394</div>
+                <div>factura@reto.com</div>
+              </div>
+            </div>
+          </header>
+          <main>
+            <div class="row">
+                <div class="col-md-4 col invoice-to">
+                  Ingrese la cédula del cliente
+                </div>
+              <div class="col-md-4">
+                <v-select label="identificacion" v-model="clienteFactura" :options="listaClientes"></v-select>
+              </div>
+            </div>
+            <div class="row contacts">
+              <div class="col invoice-to">
+                <div class="text-gray-light">INVOICE TO:</div>
+                <h2 class="to">John Doe</h2>
+                <div class="address">796 Silver Harbour, TX 79273, US</div>
+                <div class="email"><a href="mailto:john@example.com">john@example.com</a></div>
+              </div>
+              <div class="col invoice-details">
+                <h1 class="invoice-id">INVOICE 3-2-1</h1>
+                <div class="date">Date of Invoice: 01/10/2018</div>
+                <div class="date">Due Date: 30/10/2018</div>
+              </div>
+            </div>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th class="text-left">DESCRIPTION</th>
+                  <th class="text-right">HOUR PRICE</th>
+                  <th class="text-right">HOURS</th>
+                  <th class="text-right">TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="no">04</td>
+                  <td class="text-left">
+                    <h3>
+                      <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
+                        Youtube channel
+                      </a>
+                    </h3>
+                    <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
+                      Useful videos
+                    </a>
+                    to improve your Javascript skills. Subscribe and stay tuned :)
+                  </td>
+                  <td class="unit">$0.00</td>
+                  <td class="qty">100</td>
+                  <td class="total">$0.00</td>
+                </tr>
+                <tr>
+                  <td class="no">01</td>
+                  <td class="text-left">
+                    <h3>Website Design</h3>Creating a recognizable design solution based on the company's existing
+                    visual identity
+                  </td>
+                  <td class="unit">$40.00</td>
+                  <td class="qty">30</td>
+                  <td class="total">$1,200.00</td>
+                </tr>
+                <tr>
+                  <td class="no">02</td>
+                  <td class="text-left">
+                    <h3>Website Development</h3>Developing a Content Management System-based Website
+                  </td>
+                  <td class="unit">$40.00</td>
+                  <td class="qty">80</td>
+                  <td class="total">$3,200.00</td>
+                </tr>
+                <tr>
+                  <td class="no">03</td>
+                  <td class="text-left">
+                    <h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)
+                  </td>
+                  <td class="unit">$40.00</td>
+                  <td class="qty">20</td>
+                  <td class="total">$800.00</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2"></td>
+                  <td colspan="2">SUBTOTAL</td>
+                  <td>$5,200.00</td>
+                </tr>
+                <tr>
+                  <td colspan="2"></td>
+                  <td colspan="2">TAX 25%</td>
+                  <td>$1,300.00</td>
+                </tr>
+                <tr>
+                  <td colspan="2"></td>
+                  <td colspan="2">GRAND TOTAL</td>
+                  <td>$6,500.00</td>
+                </tr>
+              </tfoot>
+            </table>
+          </main>
+        </div>
+        <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Fin factura -->
+    <agregar-cliente v-if="estadosApp.agregarCliente" :lista="listaClientes"></agregar-cliente>
   </div>
   <script src="https://unpkg.com/vue-select@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="./js/index.js"></script>  
+  <script src="./js/index.js"></script>
+
 </body>
 
 </html>
